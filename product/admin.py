@@ -2,6 +2,7 @@ from .models import Product, ProductType, Purchase, Season, ProductSize, Cashier
 from django.contrib import admin
 from django.db.models import Sum, F
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'code', 'initial_price', 'markup', 'price_after_markup')
