@@ -109,7 +109,7 @@ def index(request):
             print(filename)
             name, confidence = validate_face(filename)
             print(name, confidence)
-            if not confidence:
+            if confidence:
                 print(3, confidence)
                 return JsonResponse({'data': 'Success'})
         return JsonResponse({'data': 'Error'})

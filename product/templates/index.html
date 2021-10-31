@@ -1,12 +1,12 @@
 {% extends "product/base.html" %}
 {% block face %}
-    <div class="camera__row">
+    <div class="camera__row shadow">
         <form>
             {% csrf_token %}
-            <nav class="navbar navbar-dark bg-dark p-3">
+            <nav class="navbar navbar-light p-3" style="background-color: #e3f2fd;">
                 <div class="container-fluid">
                     <span class="navbar-brand mb-0">Подтвердите свою личность</span>
-                    <button type=button onClick="take_snapshot()" class="btn btn-primary ms-auto">Подтвердить</button>
+                    <button type=button onClick="take_snapshot()" class="btn btn btn-outline-primary ms-auto">Подтвердить</button>
                 </div>
             </nav>
             <div id="error" class="alert alert-danger">Не удалось распознать сотрудника</div>
@@ -25,6 +25,8 @@
 
         // Configure a few settings and attach camera
         Webcam.set({
+            width: '900',
+            height: '506',
             image_format: 'jpeg',
             jpeg_quality: 100
         });

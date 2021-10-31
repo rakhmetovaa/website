@@ -103,5 +103,5 @@ def validate_face(filename):
 
         return id, confidence
     cv2.destroyAllWindows()
-    os.remove(f"media/{filename}")
+    # os.remove(f"media/{filename}")
     return "unknown", 0
