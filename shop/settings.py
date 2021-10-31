@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", '53knxm_p&8jyl)c1yvzmu$66#x*!98gz#8(t3lpifqi7fhk%##'),
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = True #os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://haunted-coffin-27267.herokuapp.com"]
 
 
 # Application definition
