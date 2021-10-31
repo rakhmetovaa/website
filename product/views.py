@@ -27,7 +27,6 @@ class PurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(income=Sum('net_income'))
-        print(context['qs'])
         context['title'] = 'Продукты'
         return context
 
@@ -38,7 +37,6 @@ class CashierPurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('cashier__username')).annotate(income=Sum('net_income'))
-        print(context['qs'])
         context['title'] = 'Кассиры'
         return context
 
@@ -57,7 +55,6 @@ class DayPurchaseChartView(TemplateView):
             res.append({'item': key, 'income': sum(1 for _ in matches)})
         res = sorted(res, key=lambda d: d['item'])
         context['qs'] = res
-        print(context['qs'])
         return context
 
 
@@ -67,7 +64,6 @@ class SizePurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('product_size__size')).annotate(income=Count('id'))
-        print(context['qs'])
         context['title'] = 'Размеры'
         return context
 
@@ -78,7 +74,6 @@ class DiscountPurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('discount_type')).annotate(income=Count('id'))
-        print(context['qs'])
         context['title'] = 'Скидки'
         return context
 
@@ -96,21 +91,17 @@ def home(request):
 def index(request):
     if request.method == "POST":
         data = request.body
-        print(1)
         data = json.loads(data[0:len(data)])
         temp = len('data:image/jpeg;base64,')
-        print(2)
         for d in data:
             d = d[temp:len(d)]
             imgdata = base64.b64decode(d)
             filename = randomString()+'.jpg'  # I assume you have a way of picking unique filenames
             with open(f"media/{filename}", 'wb') as f:
                 f.write(imgdata)
-            print(filename)
             name, confidence = validate_face(filename)
             print(name, confidence)
             if confidence:
-                print(3, confidence)
                 return JsonResponse({'data': 'Success'})
         return JsonResponse({'data': 'Error'})
     return render(request, 'index.html')
@@ -130,7 +121,7 @@ def send_email(request):
             subject = form.cleaned_data.get("subject")
             message = form.cleaned_data.get("message")
 
-            send_mail(subject, message, email, [email])
+            send_mail(subject, message, EMAIL_HOST, [email])
             return redirect('/')
     else:
         form = EmailSendForm()

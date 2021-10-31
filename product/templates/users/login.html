@@ -2,15 +2,15 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="row justify-content-center mt-5">
-        <div class="content-section">
+        <div class="content-section shadow p-3">
             <form method="post">
                 {% csrf_token %}
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4"> Log In</legend>
+                    <legend class="border-bottom mb-4">Войти в систему</legend>
                     {{ form|crispy }}
                 </fieldset>
-                <div class="form-group ps-1">
-                    <button type="submit" class="btn btn-outline-info ms-2">Login</button>
+                <div class="form-group ps-1 mt-3">
+                    <button type="submit" class="btn btn-outline-info ms-2">Войти</button>
                 </div>
             </form>
         </div>

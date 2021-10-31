@@ -82,6 +82,7 @@ def validate_face(filename):
     minH = 0.1 * 480
     img = cv2.imread(f"media/{filename}")
     img = cv2.flip(img, 1)  # Flip vertically
+    os.remove(f"media/{filename}")
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = faceCascade.detectMultiScale(
         gray,
@@ -103,5 +104,4 @@ def validate_face(filename):
 
         return id, confidence
     cv2.destroyAllWindows()
-    # os.remove(f"media/{filename}")
     return "unknown", 0
