@@ -20,7 +20,6 @@ from django.core.mail import send_mail
 from shop.settings import EMAIL_HOST
 
 
-
 class PurchaseChartView(TemplateView):
     template_name = 'product/chart.html'
 

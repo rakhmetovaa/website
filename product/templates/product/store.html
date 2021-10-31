@@ -18,11 +18,13 @@
 
         <!-- Navbar on small screens -->
         <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+            <a href="{% url 'shop-home' %}" class="w3-bar-item w3-button w3-padding-large">Главная</a>
             <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-padding-large">Продукты</a>
             <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-padding-large">Размеры</a>
             <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-padding-large">Кассиры</a>
             <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-padding-large">Скидки</a>
             <a href="{% url 'day' %}" class="w3-bar-item w3-button w3-padding-large">Сутки</a>
+            <a href="{% url 'send-email' %}" class="w3-bar-item w3-button w3-padding-large">Заявки</a>
         </div>
     </div>
 {% endblock content %}
