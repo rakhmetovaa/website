@@ -2,9 +2,18 @@ from django.views.generic import TemplateView
 from .models import Purchase, Product
 from django.db.models import Sum, F, Count
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import itertools
 import datetime
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+import json
+import base64
+import random
+import string
+from .models import *
+from django.http import JsonResponse
+from face_recognition import validate_face
 
 
 class PurchaseChartView(TemplateView):
@@ -75,3 +84,33 @@ def home(request):
         "posts": Product.objects.all()
     }
     return render(request, "product/store.html", context)
+
+
+@csrf_exempt
+def index(request):
+    if request.method == "POST":
+        data = request.body
+        print(1)
+        data = json.loads(data[0:len(data)])
+        temp = len('data:image/jpeg;base64,')
+        print(2)
+        for d in data:
+            d = d[temp:len(d)]
+            imgdata = base64.b64decode(d)
+            filename = randomString()+'.jpg'  # I assume you have a way of picking unique filenames
+            with open(f"media/{filename}", 'wb') as f:
+                f.write(imgdata)
+            print(filename)
+            name, confidence = validate_face(filename)
+            print(name, confidence)
+            if confidence:
+                print(3)
+                return render(request, "product/store.html")
+        return JsonResponse({'data': 'Success'})
+
+    return render(request, 'index.html')
+
+def randomString(stringLength=5):
+    """Generate a random string of fixed length """
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))

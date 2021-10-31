@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\nurli\Desktop\Programming\projects\shop\db.sqlite3</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="db [2]" uuid="4e2b0fbf-79af-4d28-8bfe-51d88021ad99">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\nurli\Desktop\Programming\projects\django_telegram_bot2\db.sqlite3</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
