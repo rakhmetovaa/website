@@ -25,3 +25,4 @@ zipp==3.6.0
 gunicorn==19.0.0
 opencv-contrib-python-headless
 opencv-python-headless
+opencv-contrib-python
