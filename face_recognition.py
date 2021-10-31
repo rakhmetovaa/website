@@ -34,7 +34,6 @@ def create_dataset(id):
     # Do a bit of cleanup
     print("\n [INFO] Exiting Program and cleanup stuff")
     cam.release()
-    cv2.destroyAllWindows()
 
 
 
@@ -100,8 +99,6 @@ def validate_face(filename):
         else:
             id = "unknown"
             confidence = 100 - confidence
-        cv2.destroyAllWindows()
 
         return id, confidence
-    cv2.destroyAllWindows()
     return "unknown", 0
