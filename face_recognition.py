@@ -101,4 +101,4 @@ def validate_face(filename):
             confidence = 100 - confidence
 
         return id, confidence
-    return "unknown", 0
+    return "unknown", 100
