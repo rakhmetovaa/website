@@ -1,78 +1,84 @@
 {% extends "product/base.html" %}
 {% block content %}
     <div class="w3-top">
-  <div class="w3-bar w3-light-grey w3-card w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="{% url 'shop-home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-    <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Продукты</a>
-    <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Размеры</a>
-    <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Кассиры</a>
-    <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Скидки</a>
-    <a href="{% url 'day' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Сутки</a>
-  </div>
+        <div class="w3-bar w3-light-grey w3-card w3-left-align w3-large">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
+               href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                    class="fa fa-bars"></i></a>
+            <a href="{% url 'shop-home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Главная</a>
+            <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Продукты</a>
+            <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Размеры</a>
+            <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Кассиры</a>
+            <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Скидки</a>
+            <a href="{% url 'day' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Сутки</a>
+            <a href="{% url 'send-email' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Заявки</a>
+        </div>
 
-  <!-- Navbar on small screens -->
-  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-    <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-padding-large">Продукты</a>
-    <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-padding-large">Размеры</a>
-    <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-padding-large">Кассиры</a>
-    <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-padding-large">Скидки</a>
-    <a href="{% url 'day' %}" class="w3-bar-item w3-button w3-padding-large">Сутки</a>
-  </div>
-</div>
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+            <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-padding-large">Продукты</a>
+            <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-padding-large">Размеры</a>
+            <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-padding-large">Кассиры</a>
+            <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-padding-large">Скидки</a>
+            <a href="{% url 'day' %}" class="w3-bar-item w3-button w3-padding-large">Сутки</a>
+        </div>
+    </div>
 {% endblock content %}
 {% block stats %}
     <header class="w3-container w3-pale-green w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">Анализ статистики по продажам</h1>
-  <p class="w3-xlarge"></p>
-</header>
+        <h1 class="w3-margin w3-jumbo">Анализ статистики по продажам</h1>
+        <p class="w3-xlarge"></p>
+    </header>
 
-<!-- First Grid -->
-<div class="w3-row-padding w3-padding-64 w3-container">
-  <div class="w3-content">
-    <div class="w3-twothird">
-      <h1>pwoefjpwef</h1>
-      <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>
+    <!-- First Grid -->
+    <div class="w3-row-padding w3-padding-64 w3-container">
+        <div class="w3-content">
+            <div class="w3-twothird">
+                <h1>pwoefjpwef</h1>
+                <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>
 
-      <p class="w3-text-grey">wlefmlwkenflweknflweknflweknflwkenflkwefnwlekfnwlekfnlwekfnlwekfnlwekfnlwekfnlwekfnwlekfnlwekfn
-          weklfnwlkefnwlekfnlwekfnlwekfnlwekfnwlekfnlwekfnwelkfnwlefnwlefnlwe.</p>
+                <p class="w3-text-grey">
+                    wlefmlwkenflweknflweknflweknflwkenflkwefnwlekfnwlekfnlwekfnlwekfnlwekfnlwekfnlwekfnwlekfnlwekfn
+                    weklfnwlkefnwlekfnlwekfnlwekfnlwekfnwlekfnlwekfnwelkfnwlefnwlefnlwe.</p>
+            </div>
+
+            <div class="w3-third w3-center">
+                <i class="fa fa-bar-chart w3-padding-64 w3-text-aqua"></i>
+            </div>
+        </div>
     </div>
 
-    <div class="w3-third w3-center">
-      <i class="fa fa-bar-chart w3-padding-64 w3-text-aqua"></i>
+    <!-- Second Grid -->
+    <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+        <div class="w3-content">
+            <div class="w3-third w3-center">
+                <i class="fa fa-cubes w3-padding-64 w3-text-aqua w3-margin-right"></i>
+            </div>
+
+            <div class="w3-twothird">
+                <h1>Loweffm</h1>
+                <h5 class="w3-padding-64">welkfnwleusmod teklefs nostrud exercitation ullamco laboris nisi ut aliquip ex
+                    ea commodo consequat.</h5>
+
+                <p class="w3-text-grey">
+                    wepfowefjwlefnlwkenflweknflweknflwkenflewknflweknflweknflweknflweknflwkenflwenf.</p>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- Second Grid -->
-<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-  <div class="w3-content">
-    <div class="w3-third w3-center">
-      <i class="fa fa-cubes w3-padding-64 w3-text-aqua w3-margin-right"></i>
+    <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+        <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
     </div>
 
-    <div class="w3-twothird">
-      <h1>Loweffm</h1>
-      <h5 class="w3-padding-64">welkfnwleusmod teklefs nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
-
-      <p class="w3-text-grey">wepfowefjwlefnlwkenflweknflweknflwkenflewknflweknflweknflweknflweknflwkenflwenf.</p>
-    </div>
-  </div>
-</div>
-
-<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-    <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
-</div>
-
-<script>
-// Used to toggle the menu on small screens when clicking on the menu button
-function myFunction() {
-  var x = document.getElementById("navDemo");
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else {
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
-</script>
+    <script>
+        // Used to toggle the menu on small screens when clicking on the menu button
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
 {% endblock stats %}

@@ -1,4 +1,6 @@
 from django.views.generic import TemplateView
+
+from .forms import EmailSendForm
 from .models import Purchase, Product
 from django.db.models import Sum, F, Count
 from django.contrib.auth.decorators import login_required
@@ -14,6 +16,9 @@ import string
 from .models import *
 from django.http import JsonResponse
 from face_recognition import validate_face
+from django.core.mail import send_mail
+from shop.settings import EMAIL_HOST
+
 
 
 class PurchaseChartView(TemplateView):
@@ -78,8 +83,9 @@ class DiscountPurchaseChartView(TemplateView):
         return context
 
 
-@login_required
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('index')
     context = {
         "posts": Product.objects.all()
     }
@@ -103,14 +109,29 @@ def index(request):
             print(filename)
             name, confidence = validate_face(filename)
             print(name, confidence)
-            if confidence:
-                print(3)
-                return render(request, "product/store.html")
-        return JsonResponse({'data': 'Success'})
-
+            if not confidence:
+                print(3, confidence)
+                return JsonResponse({'data': 'Success'})
+        return JsonResponse({'data': 'Error'})
     return render(request, 'index.html')
+
 
 def randomString(stringLength=5):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+
+
+def send_email(request):
+    if request.method == "POST":
+        form = EmailSendForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            subject = form.cleaned_data.get("subject")
+            message = form.cleaned_data.get("message")
+
+            send_mail(subject, message, email, [email])
+            return redirect('/')
+    else:
+        form = EmailSendForm()
+    return render(request, 'email.html', {'form': form})
