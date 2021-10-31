@@ -101,7 +101,7 @@ def index(request):
                 f.write(imgdata)
             name, confidence = validate_face(filename)
             print(name, confidence)
-            if confidence:
+            if confidence >= 50:
                 return JsonResponse({'data': 'Success'})
         return JsonResponse({'data': 'Error'})
     return render(request, 'index.html')
