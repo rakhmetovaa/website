@@ -15,7 +15,7 @@ import random
 import string
 from .models import *
 from django.http import JsonResponse
-from face_recognition import validate_face
+from face_recognition import validate_face, create_dataset, train_faces
 from django.core.mail import send_mail
 from shop.settings import EMAIL_HOST
 
@@ -85,6 +85,26 @@ def home(request):
     }
     return render(request, "product/store.html", context)
 
+@login_required
+@csrf_exempt
+def adding_face(request):
+    if request.method == "POST":
+        data = request.body
+        data = json.loads(data[0:len(data)])
+        temp = len('data:image/jpeg;base64,')
+        i = 0
+        for d in data:
+            d = d[temp:len(d)]
+            imgdata = base64.b64decode(d)
+            filename = str(request.user.id)+f'.{i}.jpg'  # I assume you have a way of picking unique filenames
+            with open(f"media/{filename}", 'wb') as f:
+                f.write(imgdata)
+            i += 1
+        create_dataset(request.user.id)
+        train_faces()
+        return JsonResponse({'data': 'Error'})
+    return render(request, 'adding_face.html')
+
 
 @csrf_exempt
 def index(request):
@@ -98,9 +118,9 @@ def index(request):
             filename = randomString()+'.jpg'  # I assume you have a way of picking unique filenames
             with open(f"media/{filename}", 'wb') as f:
                 f.write(imgdata)
-            name, confidence = validate_face(filename)
-            print(name, confidence)
-            if confidence <= 50:
+            confidence = validate_face(filename)
+            print(confidence)
+            if confidence >= 50:
                 return JsonResponse({'data': 'Success'})
         return JsonResponse({'data': 'Error'})
     return render(request, 'index.html')

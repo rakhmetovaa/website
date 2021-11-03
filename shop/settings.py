@@ -136,7 +136,7 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
 LOGIN_REDIRECT_URL = "/"
-
+LOGIN_URL = "/login"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
@@ -144,3 +144,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 django_heroku.settings(locals())
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2621440 * 2 * 2 * 2
