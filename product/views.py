@@ -40,22 +40,35 @@ class CashierPurchaseChartView(TemplateView):
         return context
 
 
-class DayPurchaseChartView(TemplateView):
+class HourPurchaseChartView(TemplateView):
     template_name = 'product/chart.html'
+    choice = "hour"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Время'
         objs = Purchase.objects.filter()
-        groups = itertools.groupby(objs, lambda x: x.date.hour)
+        if self.choice == "hour":
+            groups = itertools.groupby(objs, lambda x: x.date.hour)
+        elif self.choice == "month":
+            groups = itertools.groupby(objs, lambda x: x.date.month)
+        elif self.choice == "year":
+            groups = itertools.groupby(objs, lambda x: x.date.year)
         res = []
         for group, matches in groups:  # now you are traversing the list ...
-            key = str(group) + ':00'
+            key = str(group)
             res.append({'item': key, 'income': sum(1 for _ in matches)})
         res = sorted(res, key=lambda d: d['item'])
         context['qs'] = res
         return context
 
+
+class MonthPurchaseChartView(HourPurchaseChartView):
+    choice = "month"
+
+
+class YearPurchaseChartView(HourPurchaseChartView):
+    choice = "year"
 
 class SizePurchaseChartView(TemplateView):
     template_name = 'product/chart.html'

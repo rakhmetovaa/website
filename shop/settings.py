@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY"),
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.getenv("DEBUG") == "False" else True
 
-ALLOWED_HOSTS = ["https://shop-aidana.herokuapp.com"]
+ALLOWED_HOSTS = ["https://shop-project-kbtu.herokuapp.com"]
 
 
 # Application definition

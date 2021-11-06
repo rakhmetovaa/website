@@ -48,6 +48,9 @@
 {% block stats %}
     <div class="row mt-5 justify-content-center">
         <div class="col-8 p-5">
+             <a href="{% url 'hour' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Hour</a>
+             <a href="{% url 'month' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Month</a>
+             <a href="{% url 'year' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Year</a>
             <canvas id="myChart" width="200" height="100"></canvas>
         </div>
     </div>

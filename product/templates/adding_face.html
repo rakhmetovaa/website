@@ -7,7 +7,7 @@
                 <div class="container-fluid">
                     <span class="navbar-brand mb-0">Смотрите в камеру</span>
                     <button type=button onClick="take_snapshots()" class="btn btn btn-outline-info ms-auto" id="hider">Добавить</button>
-
+                    <div id="info" class="alert alert-info" hidden="true">FaceId in process, DO NOT MOVE</div>
                 </div>
             </nav>
 
@@ -33,6 +33,7 @@
         let imgArr = [];
         function take_snapshots() {
             document.getElementById('hider').hidden = true;
+            document.getElementById('info').hidden = false;
             // take snapshot and get image data
             for (var i=0; i<=20; i++){
                 take_snapshot();
@@ -61,7 +62,7 @@
                     .then((responseJSON) => {
                         console.log(responseJSON);
                         if (responseJSON.data === 'Error') {
-                            window.location.replace("/face-recognition/");
+                            window.location.replace("/");
                         }
                     })
             }
