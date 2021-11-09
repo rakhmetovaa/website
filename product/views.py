@@ -1,5 +1,5 @@
+import numpy as np
 from django.views.generic import TemplateView
-
 from .forms import EmailSendForm
 from .models import Purchase, Product
 from django.db.models import Sum, F, Count
@@ -25,7 +25,8 @@ class PurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(income=Sum('net_income'))
+        context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(
+            income=Sum('net_income'))
         context['title'] = 'Продукты'
         return context
 
@@ -70,6 +71,7 @@ class MonthPurchaseChartView(HourPurchaseChartView):
 class YearPurchaseChartView(HourPurchaseChartView):
     choice = "year"
 
+
 class SizePurchaseChartView(TemplateView):
     template_name = 'product/chart.html'
 
@@ -98,6 +100,7 @@ def home(request):
     }
     return render(request, "product/store.html", context)
 
+
 @login_required
 @csrf_exempt
 def adding_face(request):
@@ -109,7 +112,7 @@ def adding_face(request):
         for d in data:
             d = d[temp:len(d)]
             imgdata = base64.b64decode(d)
-            filename = str(request.user.id)+f'.{i}.jpg'  # I assume you have a way of picking unique filenames
+            filename = str(request.user.id) + f'.{i}.jpg'  # I assume you have a way of picking unique filenames
             with open(f"media/{filename}", 'wb') as f:
                 f.write(imgdata)
             i += 1
@@ -128,7 +131,7 @@ def index(request):
         for d in data:
             d = d[temp:len(d)]
             imgdata = base64.b64decode(d)
-            filename = randomString()+'.jpg'  # I assume you have a way of picking unique filenames
+            filename = randomString() + '.jpg'  # I assume you have a way of picking unique filenames
             with open(f"media/{filename}", 'wb') as f:
                 f.write(imgdata)
             confidence = validate_face(filename)
@@ -158,3 +161,56 @@ def send_email(request):
     else:
         form = EmailSendForm()
     return render(request, 'email.html', {'form': form})
+
+def slope(x, y):
+    x = np.array(x)
+    y = np.array(y)
+    m = (((np.mean(x) * np.mean(y)) - np.mean(x*y))/((np.mean(x) * np.mean(x)) - np.mean(x*x)))
+    m = round(m, 2)
+    b = np.mean(y) - np.mean(x)*m
+    b = round(b, 2)
+    return m, b
+
+@csrf_exempt
+def net_income(request, from_date="2020-11-02", to_date="2020-11-02", expences=0, *args, **kwargs):
+    if to_date <= from_date:
+        return render(request, "product/net_income.html", {})
+    from_date = datetime.datetime.strptime(from_date, '%Y-%m-%d')
+    to_date = datetime.datetime.strptime(to_date, '%Y-%m-%d')
+    labels = []
+    net_income_labels = []
+    min_number = 15
+    if (to_date - from_date).days >= min_number:
+        diff = (to_date - from_date) // min_number
+    else:
+        diff = datetime.timedelta(days=1)
+    temp = from_date
+    while temp <= to_date:
+        labels.append(temp)
+        temp += diff
+    exp_diff = expences / len(labels)
+    for day_count in range(len(labels) - 1):
+        net_income_labels.append(
+            int((Purchase.objects.filter(
+                date__lt=labels[day_count + 1],
+                date__gte=labels[day_count]).aggregate(
+                total=Sum('net_income')
+            ).get('total') or 0) - exp_diff)
+        )
+    net_income = sum(net_income_labels)
+    x = [i for i in range(len(net_income_labels))]
+    if len(x) > 1:
+        m, b = slope(x, net_income_labels)
+    else:
+        m, b = 0, 0
+    for i in range(1, 6):
+        labels.append(to_date + i * diff)
+    predict_labels = [int((i * m + b) or 0) for i in range(len(labels))]
+    context = {
+        'labels': labels,
+        'net_income': net_income,
+        'net_income_labels': net_income_labels,
+        'predict_labels': predict_labels,
+    }
+    print(context)
+    return render(request, "product/net_income.html", context)
