@@ -26,7 +26,7 @@ class PurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(
-            income=Sum('net_income'))
+            income=Sum('net_income')).order_by('item')
         context['title'] = 'Продукты'
         return context
 
@@ -36,40 +36,47 @@ class CashierPurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('cashier__username')).annotate(income=Sum('net_income'))
+        context['qs'] = Purchase.objects.values(item=F('cashier__username')).annotate(income=Sum('net_income')).order_by('item')
         context['title'] = 'Кассиры'
         return context
 
 
 class HourPurchaseChartView(TemplateView):
     template_name = 'product/chart.html'
-    choice = "hour"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Время'
-        objs = Purchase.objects.filter()
-        if self.choice == "hour":
-            groups = itertools.groupby(objs, lambda x: x.date.hour)
-        elif self.choice == "month":
-            groups = itertools.groupby(objs, lambda x: x.date.month)
-        elif self.choice == "year":
-            groups = itertools.groupby(objs, lambda x: x.date.year)
-        res = []
-        for group, matches in groups:  # now you are traversing the list ...
-            key = str(group)
-            res.append({'item': key, 'income': sum(1 for _ in matches)})
-        res = sorted(res, key=lambda d: d['item'])
+        morning = int(
+            Purchase.objects.filter(
+                date__hour__lt=12,
+                date__hour__gte=0
+            ).aggregate(
+                total=Sum('net_income')
+            ).get('total')
+            or 0
+        )
+        noon = int(
+            Purchase.objects.filter(
+                date__hour__lt=18,
+                date__hour__gte=12
+            ).aggregate(
+                total=Sum('net_income')
+            ).get('total')
+            or 0
+        )
+        evening = int(
+            Purchase.objects.filter(
+                date__hour__lt=24,
+                date__hour__gte=18
+            ).aggregate(
+                total=Sum('net_income')
+            ).get('total')
+            or 0
+        )
+        res = [{'item': 'утро', 'income': str(morning)}, {'item': 'обед', 'income': str(noon)}, {'item': 'вечер', 'income': str(evening)}]
         context['qs'] = res
         return context
-
-
-class MonthPurchaseChartView(HourPurchaseChartView):
-    choice = "month"
-
-
-class YearPurchaseChartView(HourPurchaseChartView):
-    choice = "year"
 
 
 class SizePurchaseChartView(TemplateView):
@@ -77,7 +84,7 @@ class SizePurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('product_size__size')).annotate(income=Count('id'))
+        context['qs'] = Purchase.objects.values(item=F('product_size__size')).annotate(income=Count('id')).order_by('item')
         context['title'] = 'Размеры'
         return context
 
@@ -87,7 +94,7 @@ class DiscountPurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('discount_type')).annotate(income=Count('id'))
+        context['qs'] = Purchase.objects.values(item=F('discount_type')).annotate(income=Count('id')).order_by('item')
         context['title'] = 'Скидки'
         return context
 
@@ -162,6 +169,7 @@ def send_email(request):
         form = EmailSendForm()
     return render(request, 'email.html', {'form': form})
 
+
 def slope(x, y):
     x = np.array(x)
     y = np.array(y)
@@ -171,10 +179,13 @@ def slope(x, y):
     b = round(b, 2)
     return m, b
 
+
 @csrf_exempt
 def net_income(request, from_date="2020-11-02", to_date="2020-11-02", expences=0, *args, **kwargs):
     if to_date <= from_date:
         return render(request, "product/net_income.html", {})
+    f_from_date = from_date
+    t_to_date = to_date
     from_date = datetime.datetime.strptime(from_date, '%Y-%m-%d')
     to_date = datetime.datetime.strptime(to_date, '%Y-%m-%d')
     labels = []
@@ -211,6 +222,8 @@ def net_income(request, from_date="2020-11-02", to_date="2020-11-02", expences=0
         'net_income': net_income,
         'net_income_labels': net_income_labels,
         'predict_labels': predict_labels,
+        'from_date': f_from_date,
+        'to_date': t_to_date,
+        'expences': expences,
     }
-    print(context)
     return render(request, "product/net_income.html", context)

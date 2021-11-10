@@ -1,7 +1,6 @@
 {% extends 'product/store.html' %}
 {% block title %}
     Чистая прибыль
-    {{net_income}}
 {% endblock %}
 {% block scripts %}
     <script>
@@ -63,11 +62,29 @@
                 <nav class="navbar navbar-light p-3" style="background-color: #e3f2fd;">
                     <div class="container-fluid">
                         <span class="navbar-brand mb-0">Доп.затраты</span>
-                        <input type="number" id="quantity" name="quantity" min="0" placeholder="Дополнительные затраты" value="0">
+                        <input type="number" id="quantity" name="quantity" min="0" placeholder="Дополнительные затраты"
+                               {% if expences %}
+                                    value="{{ expences }}"
+                               {% else %}
+                                    value="0"
+                                {% endif %}
+                        >
                         <span class="navbar-brand mb-0">Выберите период   c</span>
-                        <input type="date" id="from" name="from" value="2018-07-22">
+                        <input type="date" id="from" name="from"
+                               {% if from_date %}
+                                    value="{{ from_date }}"
+                               {% else %}
+                                    value="2021-01-01"
+                                {% endif %}
+                        >
                         <span class="navbar-brand mb-0">по</span>
-                        <input type="date" id="to" name="to" value="2020-07-22">
+                        <input type="date" id="to" name="to"
+                               {% if to_date %}
+                                    value="{{ to_date }}"
+                               {% else %}
+                                    value="2021-01-01"
+                                {% endif %}
+                        >
                         <span class="navbar-brand mb-0">Чистая прибыль {{ net_income }}</span>
                         <button type=button onClick="sendData()" class="btn btn btn-outline-info ms-auto">Подтвердить</button>
                     </div>
@@ -84,8 +101,19 @@
         function sendData() {
             imgArr = "fwef";
             expences = document.getElementById('quantity').value;
+            console.log(expences);
+            if (expences === 'null'){
+                expences = '0';
+            }
             from_date = document.getElementById('from').value;
+            if (from_date === 'null'){
+                from_date = '2021-01-01';
+            }
             to_date = document.getElementById('to').value;
+            if (to_date === 'null'){
+                to_date = '2021-01-01';
+            }
+
             window.location.replace(`/net-income/${expences}/${from_date}/${to_date}`);
         }
     </script>

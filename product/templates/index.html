@@ -9,7 +9,7 @@
                     <button type=button onClick="take_snapshot()" class="btn btn btn-outline-info ms-auto">Подтвердить</button>
                 </div>
             </nav>
-            <div id="error" class="alert alert-danger">Не удалось распознать сотрудника</div>
+            <div id="error" class="alert alert-danger"></div>
             <div id="my_camera"></div>
         </form>
     </div>
@@ -56,13 +56,23 @@
                 .then((response) => response.json())
                 .then((responseJSON) => {
                     console.log(responseJSON);
-                    if (responseJSON.data === 'Error') {
+                    if ((responseJSON.data === 'Error') && (imgArr.length < 5)) {
                         error.style.display = 'block';
+                        if (5 - imgArr.length > 1) {
+                            error.innerHTML = 'Не удалось распознать сотрудника, осталось ' + (5 - imgArr.length) + ' попытки';
+                        } else {
+                            error.innerHTML = 'Не удалось распознать сотрудника, осталось ' + (5 - imgArr.length) + ' попытка';
+                        }
                     } else {
                         window.location.replace("/login/");
                     }
                 }).catch(err => {
                     error.style.display = 'block';
+                    if (5 - imgArr.length > 1) {
+                            error.innerHTML = 'Не удалось распознать сотрудника, осталось ' + (5 - imgArr.length) + ' попытки';
+                    } else {
+                            error.innerHTML = 'Не удалось распознать сотрудника, осталось ' + (5 - imgArr.length) + ' попытка';
+                        }
                 });
         }
     </script>
