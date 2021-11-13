@@ -1,0 +1,122 @@
+{% extends 'product/store.html' %}
+{% block title %}
+    Чистая прибыль
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var options = {responsive: true, // Instruct chart js to respond nicely.
+                                maintainAspectRatio: true, // Add to prevent default behaviour of full-width/height
+                            };
+
+            const myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: [
+                  {% for item in labels %}'{{ item }}', {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Net Income',
+                    data: [{% for item in net_income_labels %}'{{ item }}', {% endfor %}],
+                    borderWidth: 0,
+                    fill: false,
+                    showLine: false,
+                    borderColor: 'red',
+                    labels: [
+                  1,2,3
+                ],
+                  },
+                  {
+                      labels: [
+                  3,4,5
+                ],
+                    label: 'Linear Regression',
+                    data: [{% for item in predict_labels %}'{{ item }}', {% endfor %}],
+                    borderWidth: 1,
+                    fill: false,
+
+                    borderColor: 'green'
+                  }
+                ]
+              },
+              options: {
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: false
+                    }
+                  }],
+                },
+                  responsive: true,
+                  maintainAspectRatio: true,
+              }
+            });
+        });
+    </script>
+{% endblock %}
+{% block stats %}
+    <div class="row mt-5 justify-content-center">
+            <form>
+                {% csrf_token %}
+                <nav class="navbar navbar-light p-3" style="background-color: #e3f2fd;">
+                </nav>
+                <nav class="navbar navbar-light p-5" style="background-color: #e3f2fd;">
+                    <div class="container-fluid">
+                        <span class="navbar-brand mb-0">Доп.затраты</span>
+                        <input type="number" id="quantity" name="quantity" min="0" placeholder="Дополнительные затраты"
+                               {% if expences %}
+                                    value="{{ expences }}"
+                               {% else %}
+                                    value="0"
+                                {% endif %}
+                        >
+                        <span class="navbar-brand mb-0">Выберите период   c</span>
+                        <input type="date" id="from" name="from"
+                               {% if from_date %}
+                                    value="{{ from_date }}"
+                               {% else %}
+                                    value="2021-01-01"
+                                {% endif %}
+                        >
+                        <span class="navbar-brand mb-0">по</span>
+                        <input type="date" id="to" name="to"
+                               {% if to_date %}
+                                    value="{{ to_date }}"
+                               {% else %}
+                                    value="2021-01-01"
+                                {% endif %}
+                        >
+                        <span class="navbar-brand mb-0">Чистая прибыль {{ net_income }}</span>
+                        <button type=button onClick="sendData()" class="btn btn btn-outline-info ms-auto">Подтвердить</button>
+                    </div>
+                </nav>
+            </form>
+        <div class="col-8 p-5">
+            <canvas id="myChart" width="200" height="100"></canvas>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
+    <!-- Code to handle taking the snapshot and displaying it locally -->
+    <script language="JavaScript">
+        function sendData() {
+            imgArr = "fwef";
+            expences = document.getElementById('quantity').value;
+            console.log(expences);
+            if (expences === 'null'){
+                expences = '0';
+            }
+            from_date = document.getElementById('from').value;
+            if (from_date === 'null'){
+                from_date = '2021-01-01';
+            }
+            to_date = document.getElementById('to').value;
+            if (to_date === 'null'){
+                to_date = '2021-01-01';
+            }
+
+            window.location.replace(`/net-income/${expences}/${from_date}/${to_date}`);
+        }
+    </script>
+{% endblock %}
