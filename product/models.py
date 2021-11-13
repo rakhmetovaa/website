@@ -87,7 +87,7 @@ class Purchase(models.Model):
     discount = models.IntegerField(default=0, verbose_name='скидка')
     last_price = models.IntegerField(blank=True, null=True, verbose_name='окончательная цена')
     net_income = models.IntegerField(blank=True, null=True, verbose_name='чистая прибыль')
-    date = models.DateTimeField(auto_now_add=True, verbose_name='время продажи')
+    date = models.DateTimeField( verbose_name='время продажи',editable=True)
     cashier = models.ForeignKey(User, on_delete=models.RESTRICT, verbose_name='кассир')
 
     def save(self, *args, **kwargs):
