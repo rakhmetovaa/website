@@ -1,6 +1,8 @@
 from .models import Product, ProductType, Purchase, Season, ProductSize, Cashier
 from django.contrib import admin
 from django.db.models import Sum, F
+from django.contrib.auth.models import Group
+admin.site.unregister(Group)
 
 
 @admin.register(Product)
