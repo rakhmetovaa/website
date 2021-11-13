@@ -2,11 +2,13 @@ from django.urls import path
 from .views import (PurchaseChartView, CashierPurchaseChartView, home, SizePurchaseChartView, index,
                     DiscountPurchaseChartView, HourPurchaseChartView, send_email, adding_face, net_income)
 from django.contrib.auth import views as auth_views
+from . import views
 
 
 urlpatterns = [
     path('purchase/', PurchaseChartView.as_view(), name='purchase'),
     path('cashier/', CashierPurchaseChartView.as_view(), name='cashier'),
+    path('dashboard/',views.dashboard, name='dashboard'),
     path('size/', SizePurchaseChartView.as_view(), name='size'),
     path('discount/', DiscountPurchaseChartView.as_view(), name='discount'),
     path('hour/', HourPurchaseChartView.as_view(), name='hour'),

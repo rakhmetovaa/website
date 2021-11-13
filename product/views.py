@@ -1,6 +1,6 @@
-import numpy as np
 from django.views.generic import TemplateView
-from .forms import EmailSendForm
+
+from .forms import EmailSendForm, GraphFilterForm
 from .models import Purchase, Product
 from django.db.models import Sum, F, Count
 from django.contrib.auth.decorators import login_required
@@ -14,10 +14,65 @@ import base64
 import random
 import string
 from .models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404, HttpResponseNotFound
 from face_recognition import validate_face, create_dataset, train_faces
 from django.core.mail import send_mail
 from shop.settings import EMAIL_HOST
+import pandas as pd
+import sklearn
+
+
+
+# class DashboardChartView(TemplateView):
+#     template_name = 'product/dashboard.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         purchases = Purchase.objects.order_by('date')
+#         total_sum = 0
+#         dates = []
+#         data = []
+#         for p in purchases:
+#             date_string = p.date.strftime("%d.%m.%y")
+#             try:
+#                 index = dates.index(date_string)
+#                 data[index] = data[index] + p.product_size.product.price_after_markup * p.discount
+#             except ValueError:
+#                 dates.append(date_string)
+#                 data.append(p.product_size.product.price_after_markup * p.discount)
+#         # context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(income=Sum('net_income'))
+#         context['title'] = 'Qwerty'
+#         context['data'] = data
+#         context['dates'] = json.dumps(dates)
+#
+#         return context
+
+
+def dashboard(request):
+    if request.GET.get('dateFrom') != None and request.GET.get('dateTo') != None:
+        first_date = request.GET.get('dateFrom')
+        last_date = request.GET.get('dateTo')
+        purchases = Purchase.objects.filter(date__range=(first_date, last_date)).order_by('date')
+    else:
+        purchases = Purchase.objects.order_by('date')
+    dates = []
+    data = []
+    for p in purchases:
+        date_string = p.date.strftime("%d.%m.%y")
+        try:
+            ind = dates.index(date_string)
+            data[ind] = data[ind] + p.product_size.product.price_after_markup * p.discount
+        except ValueError:
+            dates.append(date_string)
+            data.append(p.product_size.product.price_after_markup * p.discount)
+    current_user = request.user
+    filterForm = GraphFilterForm()
+    return render(request, 'product/dashboard.html',
+                  {'title': 'qwerty', 'data': data, 'dates': dates, 'user': current_user, 'filterForm': filterForm})
+
+
+def page_not_found(request, exeption):
+    return HttpResponseNotFound('<h1>Hello</h1>')
 
 
 class PurchaseChartView(TemplateView):
@@ -26,7 +81,7 @@ class PurchaseChartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['qs'] = Purchase.objects.values(item=F('product_size__product__name')).annotate(
-            income=Sum('net_income')).order_by('item')
+            income=Sum('net_income'))
         context['title'] = 'Продукты'
         return context
 
@@ -36,47 +91,40 @@ class CashierPurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('cashier__username')).annotate(income=Sum('net_income')).order_by('item')
+        context['qs'] = Purchase.objects.values(item=F('cashier__username')).annotate(income=Sum('net_income'))
         context['title'] = 'Кассиры'
         return context
 
 
 class HourPurchaseChartView(TemplateView):
     template_name = 'product/chart.html'
+    choice = "hour"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Время'
-        morning = int(
-            Purchase.objects.filter(
-                date__hour__lt=12,
-                date__hour__gte=0
-            ).aggregate(
-                total=Sum('net_income')
-            ).get('total')
-            or 0
-        )
-        noon = int(
-            Purchase.objects.filter(
-                date__hour__lt=18,
-                date__hour__gte=12
-            ).aggregate(
-                total=Sum('net_income')
-            ).get('total')
-            or 0
-        )
-        evening = int(
-            Purchase.objects.filter(
-                date__hour__lt=24,
-                date__hour__gte=18
-            ).aggregate(
-                total=Sum('net_income')
-            ).get('total')
-            or 0
-        )
-        res = [{'item': 'утро', 'income': str(morning)}, {'item': 'обед', 'income': str(noon)}, {'item': 'вечер', 'income': str(evening)}]
+        objs = Purchase.objects.filter()
+        if self.choice == "hour":
+            groups = itertools.groupby(objs, lambda x: x.date.hour)
+        elif self.choice == "month":
+            groups = itertools.groupby(objs, lambda x: x.date.month)
+        elif self.choice == "year":
+            groups = itertools.groupby(objs, lambda x: x.date.year)
+        res = []
+        for group, matches in groups:  # now you are traversing the list ...
+            key = str(group)
+            res.append({'item': key, 'income': sum(1 for _ in matches)})
+        res = sorted(res, key=lambda d: d['item'])
         context['qs'] = res
         return context
+
+
+class MonthPurchaseChartView(HourPurchaseChartView):
+    choice = "month"
+
+
+class YearPurchaseChartView(HourPurchaseChartView):
+    choice = "year"
 
 
 class SizePurchaseChartView(TemplateView):
@@ -84,7 +132,7 @@ class SizePurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('product_size__size')).annotate(income=Count('id')).order_by('item')
+        context['qs'] = Purchase.objects.values(item=F('product_size__size')).annotate(income=Count('id'))
         context['title'] = 'Размеры'
         return context
 
@@ -94,7 +142,7 @@ class DiscountPurchaseChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs'] = Purchase.objects.values(item=F('discount_type')).annotate(income=Count('id')).order_by('item')
+        context['qs'] = Purchase.objects.values(item=F('discount_type')).annotate(income=Count('id'))
         context['title'] = 'Скидки'
         return context
 
@@ -168,62 +216,3 @@ def send_email(request):
     else:
         form = EmailSendForm()
     return render(request, 'email.html', {'form': form})
-
-
-def slope(x, y):
-    x = np.array(x)
-    y = np.array(y)
-    m = (((np.mean(x) * np.mean(y)) - np.mean(x*y))/((np.mean(x) * np.mean(x)) - np.mean(x*x)))
-    m = round(m, 2)
-    b = np.mean(y) - np.mean(x)*m
-    b = round(b, 2)
-    return m, b
-
-
-@csrf_exempt
-def net_income(request, from_date="2020-11-02", to_date="2020-11-02", expences=0, *args, **kwargs):
-    if to_date <= from_date:
-        return render(request, "product/net_income.html", {})
-    f_from_date = from_date
-    t_to_date = to_date
-    from_date = datetime.datetime.strptime(from_date, '%Y-%m-%d')
-    to_date = datetime.datetime.strptime(to_date, '%Y-%m-%d')
-    labels = []
-    net_income_labels = []
-    min_number = 15
-    if (to_date - from_date).days >= min_number:
-        diff = (to_date - from_date) // min_number
-    else:
-        diff = datetime.timedelta(days=1)
-    temp = from_date
-    while temp <= to_date:
-        labels.append(temp)
-        temp += diff
-    exp_diff = expences / len(labels)
-    for day_count in range(len(labels) - 1):
-        net_income_labels.append(
-            int((Purchase.objects.filter(
-                date__lt=labels[day_count + 1],
-                date__gte=labels[day_count]).aggregate(
-                total=Sum('net_income')
-            ).get('total') or 0) - exp_diff)
-        )
-    net_income = sum(net_income_labels)
-    x = [i for i in range(len(net_income_labels))]
-    if len(x) > 1:
-        m, b = slope(x, net_income_labels)
-    else:
-        m, b = 0, 0
-    for i in range(1, 6):
-        labels.append(to_date + i * diff)
-    predict_labels = [int((i * m + b) or 0) for i in range(len(labels))]
-    context = {
-        'labels': labels,
-        'net_income': net_income,
-        'net_income_labels': net_income_labels,
-        'predict_labels': predict_labels,
-        'from_date': f_from_date,
-        'to_date': t_to_date,
-        'expences': expences,
-    }
-    return render(request, "product/net_income.html", context)
