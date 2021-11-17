@@ -176,6 +176,11 @@ def dashboard(request):
 
 
 def dashboard3(request):
+    graph_count = request.GET.get('count')
+    graph_quality = request.GET.get('quality')
+    if request.GET.get('count') == None and request.GET.get('quality') == None:
+        graph_count = 4
+        graph_quality = 9
     if request.GET.get('dateFrom') != None and request.GET.get('dateTo') != None:
         first_date = request.GET.get('dateFrom')
         last_date = request.GET.get('dateTo')
@@ -244,7 +249,7 @@ def dashboard3(request):
 
         clf = LinearRegression()
         clf.fit(X, Y)
-        result = clf.predict([[i, request.GET.get('count'), request.GET.get('quality')]])[0]
+        result = clf.predict([[i, graph_count, graph_quality]])[0]
         print(result)
         print("wefwef")
         monthPrediction.append(int(result))

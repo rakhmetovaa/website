@@ -37,7 +37,7 @@
             <div class="card bg-yellow-100 border-0 shadow">
                 <div class="card-header d-sm-flex flex-row align-items-center flex-0">
                     <div class="d-block mb-3 mb-sm-0">
-                        <div class="fs-5 fw-normal mb-2">Sales Value</div>
+                        <div class="fs-5 fw-normal mb-2">Predicted Value</div>
                         <h2 class="fs-3 fw-extrabold">{{ result }}</h2>
                         <div class="small mt-2">
                             <span class="fw-normal me-2">Yesterday</span>
@@ -160,7 +160,7 @@
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h2 class="fs-5 fw-bold mb-0">Page visits</h2>
+                                    <h2 class="fs-5 fw-bold mb-0">Purchases</h2>
                                 </div>
                                 <div class="col text-end">
                                     <a href="#" class="btn btn-sm btn-primary">See all</a>
@@ -216,7 +216,7 @@
                 <div class="col-12 col-xxl-6 mb-4">
                     <div class="card border-0 shadow">
                         <div class="card-header border-bottom d-flex align-items-center justify-content-between">
-                            <h2 class="fs-5 fw-bold mb-0">Team members</h2>
+                            <h2 class="fs-5 fw-bold mb-0">Cashiers</h2>
                             <a href="#" class="btn btn-sm btn-primary">See all</a>
                         </div>
                         <div class="card-body">
@@ -346,22 +346,13 @@
                     <div class="card-header d-flex flex-row align-items-center flex-0 border-bottom">
                         <div class="d-block">
                             <div class="h6 fw-normal text-gray mb-2">Total orders</div>
-                            <h2 class="h3 fw-extrabold">452</h2>
+                            <h2 class="h3 fw-extrabold">{{ purchases.count }}</h2>
                             <div class="small mt-2">
                                 <span class="fas fa-angle-up text-success"></span>
                                 <span class="text-success fw-bold">18.2%</span>
                             </div>
                         </div>
-                        <div class="d-block ms-auto">
-                            <div class="d-flex align-items-center text-end mb-2">
-                                <span class="dot rounded-circle bg-gray-800 me-2"></span>
-                                <span class="fw-normal small">July</span>
-                            </div>
-                            <div class="d-flex align-items-center text-end">
-                                <span class="dot rounded-circle bg-secondary me-2"></span>
-                                <span class="fw-normal small">August</span>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="card-body p-2">
                         <div class="custom-ct-chart-ranking ct-golden-section ct-series-a"></div>
@@ -376,23 +367,10 @@
             <div class="card border-0 shadow">
                     <div class="card-header d-flex flex-row align-items-center flex-0 border-bottom">
                         <div class="d-block">
-                            <div class="h6 fw-normal text-gray mb-2">Total orders</div>
-                            <h2 class="h3 fw-extrabold">452</h2>
-                            <div class="small mt-2">
-                                <span class="fas fa-angle-up text-success"></span>
-                                <span class="text-success fw-bold">18.2%</span>
-                            </div>
+                            <div class="h6 fw-normal text-gray mb-2"><b>Cashiers orders</b></div>
+
                         </div>
-                        <div class="d-block ms-auto">
-                            <div class="d-flex align-items-center text-end mb-2">
-                                <span class="dot rounded-circle bg-gray-800 me-2"></span>
-                                <span class="fw-normal small">July</span>
-                            </div>
-                            <div class="d-flex align-items-center text-end">
-                                <span class="dot rounded-circle bg-secondary me-2"></span>
-                                <span class="fw-normal small">August</span>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="card-body p-2">
                         <div class="custom-ct-chart-traffic-share ct-golden-section ct-series-a"></div>
