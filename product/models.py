@@ -35,13 +35,14 @@ class Product(models.Model):
     brand = models.CharField(max_length=255, verbose_name='бренд')
     initial_price = models.IntegerField(verbose_name='начальная цена')
     markup = models.IntegerField(verbose_name='накрутка')
+    quality = models.CharField(max_length=255, verbose_name='качество', null=True, blank=True)
     price_after_markup = models.IntegerField(null=True, blank=True, verbose_name='цена после накрутки')
 
     def __str__(self):
         return f"{self.name} -- {self.code}"
 
     def save(self, *args, **kwargs):
-        self.price_after_markup = self.initial_price * (100 + self.markup) / 100
+        self.price_after_markup = (self.initial_price * (self.markup)) / 100
         super(Product, self).save(*args, **kwargs)
 
     class Meta:
@@ -87,19 +88,24 @@ class Purchase(models.Model):
     discount = models.IntegerField(default=0, verbose_name='скидка')
     last_price = models.IntegerField(blank=True, null=True, verbose_name='окончательная цена')
     net_income = models.IntegerField(blank=True, null=True, verbose_name='чистая прибыль')
-    date = models.DateTimeField( verbose_name='время продажи',editable=True)
+    count = models.IntegerField(blank=False, null=True, verbose_name='количество')
+    total_sum = models.IntegerField(blank=True, null=True, verbose_name='общая сумма')
+    date = models.DateTimeField(verbose_name='время продажи', editable=True)
     cashier = models.ForeignKey(User, on_delete=models.RESTRICT, verbose_name='кассир')
 
     def save(self, *args, **kwargs):
         if self.discount_type == 'percentage':
             self.last_price = self.product_size.product.price_after_markup * (100 - self.discount) / 100
+            self.total_sum = self.last_price * self.count
         if self.discount_type == 'amount':
             self.last_price = self.product_size.product.price_after_markup - self.discount
+            self.total_sum = self.last_price * self.count
         if self.discount_type == 'none':
             self.last_price = self.product_size.product.price_after_markup
+            self.total_sum = self.last_price * self.count
         self.net_income = self.last_price - self.product_size.product.initial_price
         if not self.id:
-            self.product_size.count -= 1
+            self.product_size.count -= self.count
             self.product_size.save()
         super(Purchase, self).save(*args, **kwargs)
 
@@ -109,5 +115,3 @@ class Purchase(models.Model):
     class Meta:
         verbose_name = _('продажу')
         verbose_name_plural = _('продажи')
-
-
