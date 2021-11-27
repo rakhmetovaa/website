@@ -1,25 +1,45 @@
 {% extends "product/base.html" %}
 {% block content %}
-    <div class="w3-top">
-        <div class="w3-bar w3-light-grey w3-card w3-left-align w3-large">
+    <div class="w3-top ">
+        <div class="w3-bar w3-light-grey w3-card w3-large c-navbar">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
                href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
                     class="fa fa-bars"></i></a>
             <a href="{% url 'shop-home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Главная</a>
             <a href="{% url 'dashboard' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Dashboard</a>
-            <a href="{% url 'net-income' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Чистая прибыль</a>
-            <a href="{% url 'purchase' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Продукты</a>
-            <a href="{% url 'size' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Размеры</a>
-            <a href="{% url 'cashier' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Кассиры</a>
-            <a href="{% url 'discount' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Скидки</a>
-            <a href="{% url 'hour' %}"
-               class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Сутки</a>
+            <div class="w3-dropdown-hover">
+                <button class="w3-button w3-padding-large w3-hover-white header__dropdown">Графики</button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4 header__dropdown__content">
+                    <a href="{% url 'net-income' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Чистая прибыль</a>
+                    <a href="{% url 'purchase' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Продукты</a>
+                    <a href="{% url 'size' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Размеры</a>
+                    <a href="{% url 'cashier' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Кассиры</a>
+                    <a href="{% url 'discount' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Скидки</a>
+                    <a href="{% url 'hour' %}"
+                       class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Сутки</a>
+                </div>
+            </div>
+
             <a href="{% url 'send-email' %}"
                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Заявки</a>
             <a href="/admin"
                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Администрация</a>
             <a href="/adding-face"
                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Добавить FaceId</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}"
+               class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Войти</a>
+             {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}"
+               class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Выйти</a>
+             {% endif %}
         </div>
 
         <!-- Navbar on small screens -->
@@ -35,52 +55,94 @@
     </div>
 {% endblock content %}
 {% block stats %}
-    <header class="w3-container w3-pale-green w3-center" style="padding:128px 16px">
-        <h1 class="w3-margin w3-jumbo">Анализ статистики по продажам</h1>
-        <p class="w3-xlarge"></p>
+    <header class="bg-yellow-100 w3-center c-header">
+        <h1 class="c-header__title mb-5">Анализ данных</h1>
+        {#        <div class="c-header__cards">#}
+        {#            <div class="c-header__card">#}
+        {#                <span>text</span>#}
+        {#            </div>#}
+        {#            <div class="c-header__card">#}
+        {#                <span>text</span>#}
+        {#            </div>#}
+        {#            <div class="c-header__card">#}
+        {#                <span>text</span>#}
+        {#            </div>#}
+        {#            <div class="c-header__card">#}
+        {#                <span>text</span>#}
+        {#            </div>#}
+        {#        </div>#}
+        <p style="    width: 50%;text-align: left;font-size: 30px;word-wrap: break-word;">
+            Находите прибыльные товары и ниши в предприятии вместе с нами! Автоматизируйте управление продажами, расчет прибыли и управление большим ассортиментом. Анализируй свой бизнес каждый день, чтобы улучшить продажи!
+
+        </p>
+        <button class="btn btn-link btn-sm c-header__btn" onclick="scrollToElement('first-grid')">
+            <i class="fa fa-chevron-down"></i>
+        </button>
     </header>
 
     <!-- First Grid -->
-    <div class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-twothird mt-5">
-                <h1>Крутые Data Scientist не тратят время на статистику</h1>
-{#                <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>#}
+    <div class="w3-row-padding w3-padding-64 w3-container container--100vh" id="first-grid">
+        <div class="w3-content position-relative">
+            <div class="first-grid__content">
+                <h1 style="font-size: 38px">Преимущества и возможности webstat:</h1>
+                {#                <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>#}
 
-                <p class="w3-text-grey">
-                    Недавно я узнала, что один мой хороший друг получил докторскую степень по статистике, при этом он
-                    даже никогда не думал над вопросом: а какой собственно прок от статистики? О боже. Если не знаешь —
-                    для чего, тогда и не знаешь — нужно ли оно тебе. И раз профессорам это не очевидно, посмотрим, что
-                    смогу сделать я.</p>
+                <p class="w3-text-grey h4">
+                  Быстрый поиск ниш <br>
+                    Принимать платежи<br>
+                    Прогнозирование выручки<br>
+                    Аналитика категорий и товаров<br>
+                    Расчет и контроль поставок<br>
+                    Анализ клиентской базы<br>
+                    Возможность составление базы самому<br>
+                    Регулировать доступы кассирам<br>
+
+</p>
             </div>
-
-            <div class="w3-third w3-center">
-                <i class="fa fa-bar-chart w3-padding-64 w3-text-aqua"></i>
+            <div class="w3-third w3-center first-grid__icon-container">
+                <i class="fa fa-bar-chart first-grid__icon"></i>
             </div>
         </div>
+        <button class="btn btn-link btn-sm c-header__btn" onclick="scrollToElement('second-grid')">
+            <i class="fa fa-chevron-down"></i>
+        </button>
     </div>
 
     <!-- Second Grid -->
-    <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fa fa-cubes w3-padding-64 w3-text-aqua w3-margin-right"></i>
+    <div class="w3-row-padding w3-padding-64 w3-container container--100vh second-grid__bg" id="second-grid">
+        <div class="w3-content position-relative">
+            <div class="w3-third second-grid__icon-container">
+                <i class="fa fa-cubes first-grid__icon"></i>
             </div>
 
-            <div class="w3-twothird mt-5">
-                <h1>Крутые Data Scientist не тратят время на статистику</h1>
-{#                <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>#}
-                <p class="w3-text-grey">
-                    Недавно я узнала, что один мой хороший друг получил докторскую степень по статистике, при этом он
-                    даже никогда не думал над вопросом: а какой собственно прок от статистики? О боже. Если не знаешь —
-                    для чего, тогда и не знаешь — нужно ли оно тебе. И раз профессорам это не очевидно, посмотрим, что
-                    смогу сделать я.</p>
+            <div class="second-grid__content">
+                <h1>Данные из webstat помогут вам:</h1>
+                {#                <h5 class="w3-padding-">weofjwoefjwfunt ut itation welfk.</h5>#}
+                <p class="w3-text-grey h4">
+                    - избежать заморозки дохода ;<br>
+                    - управлять бюджетом<br>
+                    - самостоятельно оценить спрос на реальных продажах ;<br>
+                    - провести анализ интересуемой категории или рубрики
+                    в пару кликов.<br>
+
+                </p>
             </div>
         </div>
     </div>
 
-    <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-        <h1 class="w3-margin w3-xlarge text-light">Люди не понимают потрясающих возможностей разумного использования технологий</h1>
+    <div class="w3-container w3-black w3-center w3-opacity w3-padding-32 footer__content">
+        <div class="footer__content-item">
+            <i class="fa fa-phone h4 mb-0"></i>
+            <a href="tel:77777777777">+7(707)222-22-22</a>
+        </div>
+        <div class="footer__content-item">
+            <i class="fa fa-envelope h4 mb-0"></i>
+            <a href="mailto:webstat@gmail.com">webstat@gmail.com</a>
+        </div>
+        <div class="footer__content-item">
+            <i class="fa fa-whatsapp h4 mb-0"></i>
+            <a href="tel:77777777777">+7(707)222-22-22</a>
+        </div>
     </div>
 
     <script>
@@ -92,6 +154,10 @@
             } else {
                 x.className = x.className.replace(" w3-show", "");
             }
+        }
+
+        function scrollToElement(id) {
+            document.getElementById(id).scrollIntoView({behavior: 'smooth'});
         }
     </script>
 {% endblock stats %}

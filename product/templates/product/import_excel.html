@@ -1,0 +1,18 @@
+{% extends "product/store.html" %}
+{% load crispy_forms_tags %}
+{% block stats %}
+    <div class="row justify-content-center mt-5">
+        <div class="content-section shadow mt-5">
+            <form class="" action="{% url 'data-migrate' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Выберите файл</legend>
+                    <input type="file" name="excel_data" class="form-control">
+                </fieldset>
+                <div class="form-group ps-1 mt-3">
+                    <button type="submit" class="btn btn-outline-info ms-2">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock stats %}

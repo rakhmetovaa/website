@@ -1,0 +1,334 @@
+{% extends 'layouts/base.html' %}
+{% block title %}
+    Чистая прибыль
+{% endblock %}
+
+{% block content %}
+    <style>
+
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header__dropdown {
+    font-family: "Montserrat", sans-serif;
+}
+
+.header__dropdown__content {
+    background-color: #f1f1f1;
+    z-index: 99999;
+}
+
+.c-header {
+    min-height: 100vh;
+    background-color: rgba(255, 193, 126, 0.2);
+    padding: 164px 88px;
+    background-image: url("../assets/img/main/bg-image.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 50%;
+    position: relative;
+}
+
+.c-header__cards {
+    width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px 24px;
+}
+
+.c-header__card {
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    padding: 48px 24px;
+    width: auto;
+}
+
+.net-income__block {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.c-header__title {
+    width: 50%;
+    font-size: 50px;
+    text-align: left;
+    line-height: 52px;
+}
+
+.c-header__subtitle {
+    width: 50%;
+    text-align: left;
+    font-size: 25px;
+    word-wrap: break-word;
+}
+
+.container--100vh {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    position: relative;
+    background-color: rgba(255, 193, 126, 0.4);
+}
+
+.c-header__btn {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: chevron 0.4s alternate infinite;
+}
+
+.first-grid__content {
+    border-radius: 0 30px 0 30px;
+    padding: 80px 32px 50px 80px;
+    background-color: #FFFFFF;
+    /*background-color: rgba(255, 238, 217, 0.9);*/
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.first-grid__icon {
+    font-size: 64px;
+    color: rgb(255, 192, 137);
+}
+.first-grid__icon-container {
+    background-color: #FFFFFF;
+    border-radius: 100px;
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    top: -80px;
+    left: -80px;
+    display: grid;
+    place-content: center;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+@keyframes chevron {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-8px);
+    }
+}
+
+.c-navbar {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.second-grid__content {
+    border-radius: 30px 0 30px 0;
+    background-color: #FFFFFF;
+    padding: 64px 48px 80px 48px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.second-grid__bg {
+    background-color: rgba(255, 193, 126, 0.6);
+}
+
+.second-grid__icon-container {
+    background-color: #FFFFFF;
+    border-radius: 100px;
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    bottom: -80px;
+    left: -80px;
+    display: grid;
+    place-content: center;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.footer__content {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 24px
+}
+
+.footer__content-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.footer__content-item a {
+    color: #FFFFFF !important;
+}
+
+.footer__content-item:hover {
+    font-size: 17px;
+    color: rgba(255, 235, 217, 0.6);
+}
+    </style>
+      <script>
+        $(document).ready(function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var options = {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: true, // Add to prevent default behaviour of full-width/height
+            };
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [
+                        {% for item in labels %}'{{ item }}', {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'Net Income',
+                        data: [{% for item in net_income_labels %}'{{ item }}', {% endfor %}],
+                        borderWidth: 0,
+                        fill: false,
+                        showLine: false,
+                        borderColor: 'red',
+                        labels: [
+                            1, 2, 3
+                        ],
+                    },
+                        {
+                            labels: [
+                                3, 4, 5
+                            ],
+                            label: 'Linear Regression',
+                            data: [{% for item in predict_labels %}'{{ item }}', {% endfor %}],
+                            borderWidth: 1,
+                            fill: false,
+
+                            borderColor: 'green'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }],
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true,
+                }
+            });
+        });
+    </script>
+
+    <div class="row p-3 mt-2">
+{#        <h1>Чистая прибыль</h1>#}
+     <div class="card border-0 shadow" style="background-color: #e3f2fd;">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <div class="d-block mb-3 mb-sm-0">
+                        <div class="fs-5 fw-normal mb-2">Чистая прибыль</div>
+                        <h2 class="fs-3 fw-extrabold">  {% firstof net_income '...' %}</h2>
+                    </div>
+
+                </div>
+                <div class="card-body" >
+                        <form>
+                {% csrf_token %}
+                <div class="px-2 py-2">
+                <div class="col-9">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="navbar-brand mb-0" >Доп.затраты</span>
+                            <input type="number" id="quantity" name="quantity" min="0" placeholder="Дополнительные затраты:" class="form-control"
+                                    {% if expences %}
+                                   value="{{ expences }}"
+                                    {% else %}
+                                   value="0"
+                                    {% endif %}
+                            >
+                        </div>
+                        <div>
+                            <span class="navbar-brand mb-0">Выберите период   c</span>
+                            <input type="date" id="from" name="from:" class="form-control"
+                                    {% if from_date %}
+                                   value="{{ from_date }}"
+                                    {% else %}
+                                   value="2021-01-01"
+                                    {% endif %}
+                            >
+
+                        </div>
+                        <div>
+                              <span class="navbar-brand mb-0">по</span>
+                            <input type="date" id="to" name="to:" class="form-control"
+                                    {% if to_date %}
+                                   value="{{ to_date }}"
+                                    {% else %}
+                                   value="2021-01-01"
+                                    {% endif %}
+                            >
+                        </div>
+                        <div>
+                            <span class="navbar-brand mb-0"></span>
+                             <h5>
+
+                             </h5>
+
+
+                        </div>
+                    <div class="d-flex align-items-end">
+                        <button type=button onClick="sendData()" class="btn btn-outline-info ms-auto">Подтвердить
+                        </button>
+                    </div>
+
+                    </div>
+                    </div>
+                </div>
+            </form>
+{#                        <a href="?format=month" class="btn btn-secondary text-dark btn-sm me-2">Month</a>#}
+{#                        <a href="?format=week" class="btn btn-dark btn-sm me-3">Week</a>#}
+                </div>
+            </div>
+
+
+        <div class="row justify-content-center">
+            <div class="col-12 p-5">
+                <canvas id="myChart" width="200" height="100"></canvas>
+            </div>
+            <div class="row mt-2">
+                <h4>{{ graph_text }}</h4>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
+    <!-- Code to handle taking the snapshot and displaying it locally -->
+    <script language="JavaScript">
+        function sendData() {
+            imgArr = "fwef";
+            expences = document.getElementById('quantity').value;
+            console.log(expences);
+            if (expences === 'null') {
+                expences = '0';
+            }
+            from_date = document.getElementById('from').value;
+            if (from_date === 'null') {
+                from_date = '2021-01-01';
+            }
+            to_date = document.getElementById('to').value;
+            if (to_date === 'null') {
+                to_date = '2021-01-01';
+            }
+
+            window.location.replace(`/net-income/${expences}/${from_date}/${to_date}`);
+        }
+    </script>
+{% endblock %}

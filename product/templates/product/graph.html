@@ -1,8 +1,25 @@
-{% extends 'product/store.html' %}
-{% block title %}
-    Purchase
-{% endblock %}
-{% block scripts %}
+{% extends 'layouts/base_animation.html' %}
+{% block content %}
+            <div class="row justify-content-center">
+
+        <div class="col-12 p-5">
+            <h2>{{ title }}</h2>
+            <div class="row"><canvas id="myChart" width="200" height="100"></canvas></div>
+                    <div class="row mt-3">
+                        <h3>{{ graph_text }}</h3>
+            </div>
+            <div class="row mt-3">
+               <h3>{{ max_hour_text }}</h3>
+            </div>
+            <div class="row mt-3">
+               <h3>{{ min_hour_text }}</h3>
+            </div>
+
+
+        </div>
+    </div>
+
+
     <script>
         $(document).ready(function () {
             var ctx = document.getElementById('myChart').getContext('2d');
@@ -36,25 +53,19 @@
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero: true
+                                beginAtZero: true,
                             }
                         }]
                     }
                 }
             });
         });
+
+
     </script>
-{% endblock %}
-{% block stats %}
-    <div class="row mt-5 justify-content-center">
-        <div class="col-8 p-5">
-            <div class="row"><canvas id="myChart" width="200" height="100"></canvas></div>
-            <div class="row">
-                <h4>{{ max_purchases_text }}</h4>
-            </div>
-            <div class="row mt-3">
-               <h4>{{ min_purchases_text }}</h4>
-            </div>
-        </div>
-    </div>
+
+
+
+
+
 {% endblock %}

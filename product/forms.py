@@ -29,5 +29,5 @@ class GraphFilterForm3(forms.Form):
     period = forms.ChoiceField(label="Period", choices=(
         (1, "month"), (3, "3 month"), (5, "5 month"), (7, "7 month"), (9, "9 month"), (12, "12 month")),
                                widget=forms.Select(attrs={'class': 'form-control mb-3'}))
-    quality = forms.IntegerField(widget=NumberInput(attrs={'class': 'form-control mb-3'}))
-    count = forms.IntegerField(widget=NumberInput(attrs={'class': 'form-control mb-3'}))
+    quality = forms.IntegerField(widget=NumberInput(attrs={'class': 'form-control mb-3', 'value': 0}))
+    count = forms.IntegerField(widget=NumberInput(attrs={'class': 'form-control mb-3', 'value': 0}))

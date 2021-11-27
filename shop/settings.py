@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'product.apps.ProductConfig',
     'corsheaders',
     "bootstrap5",
-    "crispy_forms"
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -134,7 +134,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/dashboard"
 LOGIN_URL = "/login"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

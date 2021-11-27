@@ -1,0 +1,160 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+
+    <div class="row">
+
+        <div class="col-12 mb-4">
+            <div class="py-3">
+        <h3>Анализ по клиентам</h3>
+    </div>
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Возраст</span>
+
+                </div>
+                <div class="card-body p-3" >
+                    <p style="text-align: left;font-size: 20px;word-wrap: break-word;">
+            Мало просто привлекать новых клиентов. Важно заставить их возвращаться снова и снова. Один лояльный клиент зачастую приносит больший доход, чем 10 новых покупателей. И вот почему:
+            <br>1.	 Лояльные клиенты тратят больше денег за все время работы с вашей компанией;
+            <br>2.	Они классные и при этом бесплатные «рекламные агенты», ведь, скорее всего, они порекомендуют вас друзьям и родственникам.
+            <br>Чтобы последний пункт сработал, радуйте покупателей безупречным сервисом и отношением к ним.
+
+        </p>
+                    <div class="row mb-2">
+                          <img src="/static/assets/img/graph/img.png" alt="clients">
+                    </div>
+                    <h5>
+                        Возраст: Это относится к числу лет каждого клиента.Здесь показывается график покупателей по возрасту.
+                        Больше покупают молодые люди в возрасте 25-27 лет.Юные покупатели покупают меньше, а кому до 40 лет покупают толко необходимые им товар.
+                        Люди в возрасте от 40 до 70 в графике показывают меньшее количество товаров.
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+    <div class="col-12 mb-4">
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Род занятий</span>
+                </div>
+                <div class="card-body p-3" >
+                    <div class="row">
+                        <div class="col-8">
+                            <img src="/static/assets/img/graph/img_1.png" alt="clients">
+                        </div>
+                        <div class="col-4">
+                            <h5>
+                              Род занятий: Это относится к типу занятий каждого клиента. Это категориальные данные, которые классифицируются как неквалифицированные/незанятые, обозначенные 0, квалифицированные занятые, обозначенные 1, и Квалифицированные/Управленческие/Самозанятые, обозначенные 2.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{#            <div class="col-12 mb-4">#}
+{#            <div class="card  border-0 shadow">#}
+{#                <div class="card-header d-sm-flex flex-row align-items-center flex-0">#}
+{#                    <span style="font-size: 23px;font-weight: 600">Размер поселения</span>#}
+{#                </div>#}
+{#                <div class="card-body p-3" >#}
+{#                    <div class="row">#}
+{#                        <div class="col-4">#}
+{#                          <h5>#}
+{##}
+{#                              Размер поселения: Это относится к размеру города, в котором проживает каждый клиент. Это категориальные данные, которые классифицируются как малый город, обозначенный 2, город среднего размера, обозначенный 0, и большой город, обозначенный 1.#}
+{#                            </h5>#}
+{#                        </div>#}
+{#                        <div class="col-8">#}
+{#                              <img src="/static/assets/img/graph/img_3.png" alt="clients">#}
+{##}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+
+
+
+
+
+
+    <div class="col-6 mb-4">
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Семейное положение</span>
+                </div>
+                <div class="card-body p-3" >
+                    <div class="row">
+                        <img src="/static/assets/img/graph/img_2.png" alt="clients">
+                        </div>
+                    </div>
+                <div class="row" style="margin:5px">
+                   <h5>
+                              Семейное положение: Это также категориальный тип данных.Это относится к семейному положению каждого клиента.Одинокий обозначается как 0, а женатый/разведенный/вдова - как 1<br><br><br>
+
+                   </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 mb-4">
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Размер поселения</span>
+                </div>
+                <div class="card-body p-3" >
+                    <div class="row">
+                        <img src="/static/assets/img/graph/img_3.png" alt="clients">
+                        </div>
+                    </div>
+                <div class="row" style="margin:5px">
+                    <h5>
+                              Размер поселения: Это относится к размеру города, в котором проживает каждый клиент. Это категориальные данные, которые классифицируются как малый город, обозначенный 2, город среднего размера, обозначенный 0, и большой город, обозначенный 1.
+                            </h5>
+                </div>
+            </div>
+        </div>
+
+
+            <div class="col-6 mb-4">
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Income</span>
+                </div>
+                <div class="card-body p-3" >
+                    <div class="row">
+                        <img src="/static/assets/img/graph/img_4.png" alt="clients">
+                        </div>
+                    </div>
+                <div class="row" style="margin:5px">
+                    <h5>
+                             В этом графике показаны покупатели по возрастам и их доходам(красное-у кого меньше дохода,зеленый-стандартный доход,фиолетовое-карьеро ориентированы,голубое-у кого больше дохода).
+                            </h5>
+                </div>
+            </div>
+        </div>
+
+                <div class="col-6 mb-4">
+            <div class="card  border-0 shadow">
+                <div class="card-header d-sm-flex flex-row align-items-center flex-0">
+                    <span style="font-size: 23px;font-weight: 600">Income</span>
+                </div>
+                <div class="card-body p-3" >
+                    <div class="row">
+                        <img src="/static/assets/img/graph/img_5.png" alt="clients">
+                        </div>
+                    </div>
+                <div class="row" style="margin:5px">
+                    <h5>
+                             Как вы видите,красное это кто средне зарабатывает и в этом сегменте много кто покупает с таким доходом.Получается,можно приносить товары с средними ценами, чтобы этот сегмент клиентов много закупались. Нацеленные на карьере тоже много, поэтому нужно приносить офисные вещи. А малое количество получает люди в сегменте зеленого(которые нацелены на определенный товар), им можно сделать день скидок,чтобы превлекать их в ваш магазин. Среднее количество занимает сегмент фиолетого,у кого больше дохода,вот они смотрят на качество товаров.Чтобы было больше этого сегмента людей, нужно еще больше продавать и продвигать качественных вещей.
+                            </h5>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+{% endblock %}

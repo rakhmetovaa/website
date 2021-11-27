@@ -45,17 +45,19 @@
                             <span class="text-success fw-bold">10.57%</span>
                         </div>
                     </div>
-                    <div class="d-flex ms-auto">
-                        <form method="get">
-                            {{ filterForm }}
-                            <button class="btn btn-outline-primary">Filter</button>
-                        </form>
 
-{#                        <a href="?format=month" class="btn btn-secondary text-dark btn-sm me-2">Month</a>#}
-{#                        <a href="?format=week" class="btn btn-dark btn-sm me-3">Week</a>#}
-                    </div>
                 </div>
                 <div class="card-body p-3" >
+                        <form method="get" class="d-flex justify-content-between">
+                            {{ filterForm.as_p }}
+                            <p class="d-flex align-items-end">
+
+                                 <button id="id_submit" class="btn btn-outline-primary mb-3">Filter</button>
+                            </p>
+
+                        </form>
+{#                        <a href="?format=month" class="btn btn-secondary text-dark btn-sm me-2">Month</a>#}
+{#                        <a href="?format=week" class="btn btn-dark btn-sm me-3">Week</a>#}
                     <div class="custom-ct-chart-sales-value ct-double-octave ct-series-d" ></div>
                 </div>
             </div>
@@ -69,8 +71,8 @@
                                 <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
                             </div>
                             <div class="d-sm-none">
-                                <h2 class="h5">Customers</h2>
-                                <h3 class="fw-extrabold mb-1">345,678</h3>
+                                <h2 class="h5">Purchases</h2>
+                                <h3 class="fw-extrabold mb-1">{{ last_month_purchases.count }}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
@@ -100,8 +102,8 @@
                                 <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg>
                             </div>
                             <div class="d-sm-none">
-                                <h2 class="fw-extrabold h5">Revenue</h2>
-                                <h3 class="mb-1">$43,594</h3>
+                                <h2 class="fw-extrabold h5">Total Period Income</h2>
+                                <h3 class="mb-1">{{totalIncome}}</h3>
                             </div>
                         </div>
                         <div class="col-12 col-xl-7 px-xl-0">
@@ -495,7 +497,7 @@
 <script>
         if(document.querySelector('.custom-ct-chart-sales-value')) {
         //Chart 5
-        new Chartist.Line('.custom-ct-chart-sales-value', {
+        var chart =  new Chartist.Line('.custom-ct-chart-sales-value', {
             labels: {{months|safe}},
             series: [
                                 {
@@ -511,9 +513,13 @@
 
             ]
         }, {
-            low: 0,
             showArea: true,
             fullWidth: true,
+            chartPadding: {
+                right: 60,
+                left:40
+            },
+
             plugins: [
                 Chartist.plugins.tooltip()
             ],
@@ -534,6 +540,122 @@
 
 
         });
+
+
+        var seq = 0,
+  delays = 80,
+  durations = 500;
+
+// Once the chart is fully created we reset the sequence
+chart.on('created', function() {
+  seq = 0;
+});
+
+// On each drawn element by Chartist we use the Chartist.Svg API to trigger SMIL animations
+chart.on('draw', function(data) {
+  seq++;
+
+  if(data.type === 'line') {
+    // If the drawn element is a line we do a simple opacity fade in. This could also be achieved using CSS3 animations.
+    data.element.animate({
+      opacity: {
+        // The delay when we like to start the animation
+        begin: seq * delays + 1000,
+        // Duration of the animation
+        dur: durations,
+        // The value where the animation should start
+        from: 0,
+        // The value where it should end
+        to: 1
+      }
+    });
+  } else if(data.type === 'label' && data.axis === 'x') {
+    data.element.animate({
+      y: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.y + 100,
+        to: data.y,
+        // We can specify an easing function from Chartist.Svg.Easing
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'label' && data.axis === 'y') {
+    data.element.animate({
+      x: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 100,
+        to: data.x,
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'point') {
+    data.element.animate({
+      x1: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 10,
+        to: data.x,
+        easing: 'easeOutQuart'
+      },
+      x2: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 10,
+        to: data.x,
+        easing: 'easeOutQuart'
+      },
+      opacity: {
+        begin: seq * delays,
+        dur: durations,
+        from: 0,
+        to: 1,
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'grid') {
+    // Using data.axis we get x or y which we can use to construct our animation definition objects
+    var pos1Animation = {
+      begin: seq * delays,
+      dur: durations,
+      from: data[data.axis.units.pos + '1'] - 30,
+      to: data[data.axis.units.pos + '1'],
+      easing: 'easeOutQuart'
+    };
+
+    var pos2Animation = {
+      begin: seq * delays,
+      dur: durations,
+      from: data[data.axis.units.pos + '2'] - 100,
+      to: data[data.axis.units.pos + '2'],
+      easing: 'easeOutQuart'
+    };
+
+    var animations = {};
+    animations[data.axis.units.pos + '1'] = pos1Animation;
+    animations[data.axis.units.pos + '2'] = pos2Animation;
+    animations['opacity'] = {
+      begin: seq * delays,
+      dur: durations,
+      from: 0,
+      to: 1,
+      easing: 'easeOutQuart'
+    };
+
+    data.element.animate(animations);
+  }
+});
+
+// For the sake of the example we update the chart every time it's created with a delay of 10 seconds
+chart.on('created', function() {
+  if(window.__exampleAnimateTimeout) {
+    clearTimeout(window.__exampleAnimateTimeout);
+    window.__exampleAnimateTimeout = null;
+  }
+  window.__exampleAnimateTimeout = setTimeout(chart.update.bind(chart), 12000);
+});
+
     }
 
     if(document.querySelector('.custom-ct-chart-ranking')) {
